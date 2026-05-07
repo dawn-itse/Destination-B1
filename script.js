@@ -5909,7 +5909,9 @@ const englishWord = document.getElementById("englishWord");
 const pronunciation = document.getElementById("pronunciation");
 const vietnameseMeaning = document.getElementById("vietnameseMeaning");
 const exampleText = document.getElementById("exampleText");
+const exampleMeaningText = document.getElementById("exampleMeaningText");
 const speakBtn = document.getElementById("speakBtn");
+const speakExampleBtn = document.getElementById("speakExampleBtn");
 const prevBtn = document.getElementById("prevBtn");
 const nextBtn = document.getElementById("nextBtn");
 
@@ -5919,6 +5921,9 @@ const typingPosition = document.getElementById("typingPosition");
 const typingInput = document.getElementById("typingInput");
 const checkBtn = document.getElementById("checkBtn");
 const typingFeedback = document.getElementById("typingFeedback");
+const typingExampleBox = document.getElementById("typingExampleBox");
+const typingExampleText = document.getElementById("typingExampleText");
+const typingExampleMeaning = document.getElementById("typingExampleMeaning");
 const showAnswerBtn = document.getElementById("showAnswerBtn");
 const typingPrevBtn = document.getElementById("typingPrevBtn");
 const typingNextBtn = document.getElementById("typingNextBtn");
@@ -5969,6 +5974,70 @@ function getAcceptedAnswers(word) {
   ].map(answer => normalizeAnswer(answer)).filter(Boolean))];
 }
 
+
+/**
+ * Lấy từ/ cụm từ sạch hơn để đưa vào câu ví dụ.
+ * Một số dữ liệu có ký hiệu sb/sth/V-ing, hàm này đổi sang dạng dễ đọc hơn.
+ */
+function getExampleKeyword(word) {
+  return getBaseWord(word)
+    .split("=")[0]
+    .replace(/\bor\b.*$/i, "")
+    .replace(/\bsb\b/gi, "someone")
+    .replace(/\bsth\b|\bsmth\b/gi, "something")
+    .replace(/\bV-ing\b/gi, "doing something")
+    .replace(/\bto V\b/gi, "to do something")
+    .replace(/\bV\b/g, "do something")
+    .replace(/\bN\b/g, "something")
+    .replace(/\s*\/\s*/g, " or ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+/**
+ * Trả về chủ đề tiếng Anh ngắn theo từng Unit để tạo ví dụ dự phòng.
+ */
+function getUnitTopic(unit) {
+  const unitNumber = unit.match(/Unit\s+(\d+)/i)?.[1];
+  const topics = {
+    "03": "games, music, and entertainment",
+    "06": "learning and studying",
+    "09": "travel and transport",
+    "12": "friends and relationships",
+    "15": "buying and selling",
+    "18": "technology and discoveries",
+    "21": "communication",
+    "24": "people and daily life",
+    "27": "work and careers",
+    "30": "health and lifestyle",
+    "33": "creating and building",
+    "36": "nature and the universe",
+    "39": "feelings and behaviour",
+    "42": "problems and solutions"
+  };
+
+  return topics[unitNumber] || "everyday English";
+}
+
+/**
+ * Dữ liệu gốc của bạn chưa có câu ví dụ, nên app sẽ tự tạo ví dụ mẫu.
+ * Khi bạn tự điền item.example hoặc item.exampleMeaning trong vocabularyData,
+ * app sẽ ưu tiên hiển thị ví dụ bạn nhập thay vì ví dụ tự động.
+ */
+function getExampleData(item) {
+  const keyword = getExampleKeyword(item.englishWord) || "this word";
+  const topic = getUnitTopic(item.unit);
+  const englishExample = item.example?.trim()
+    || `I can use “${keyword}” when I talk about ${topic}.`;
+  const vietnameseExample = item.exampleMeaning?.trim()
+    || `Tôi có thể dùng “${keyword}” khi nói về ${topic}; nghĩa cần nhớ: ${item.vietnameseMeaning}.`;
+
+  return {
+    english: englishExample,
+    vietnamese: vietnameseExample
+  };
+}
+
 /**
  * Tạo dropdown Unit tự động từ dữ liệu.
  */
@@ -6009,7 +6078,12 @@ function renderCurrentWord() {
   englishWord.textContent = word.englishWord;
   pronunciation.textContent = word.pronunciation || "Chưa có phiên âm";
   vietnameseMeaning.textContent = word.vietnameseMeaning;
-  exampleText.textContent = word.example || "Chưa có ví dụ. Bạn có thể bổ sung example trong mảng vocabularyData.";
+
+  const example = getExampleData(word);
+  exampleText.textContent = example.english;
+  exampleMeaningText.textContent = example.vietnamese;
+  typingExampleText.textContent = example.english;
+  typingExampleMeaning.textContent = example.vietnamese;
 
   typingUnitName.textContent = word.unit;
   typingPosition.textContent = `Từ ${currentIndex + 1}/${currentUnitWords.length}`;
@@ -6047,26 +6121,30 @@ function prevWord() {
 /**
  * Phát âm bằng Web Speech API có sẵn trên trình duyệt.
  */
-function speakCurrentWord() {
+function speakText(text) {
   if (!("speechSynthesis" in window)) {
     alert("Trình duyệt của bạn chưa hỗ trợ Web Speech API.");
     return;
   }
 
-  const word = currentUnitWords[currentIndex];
-  const textToSpeak = getBaseWord(word.englishWord)
-    .replace(/\bsb\b/gi, "somebody")
-    .replace(/\bsth\b|\bsmth\b/gi, "something")
-    .replace(/\bV-ing\b/gi, "verb ing")
-    .replace(/\bV\b/g, "do")
-    .replace(/\bN\b/g, "noun");
-
   window.speechSynthesis.cancel();
-  const utterance = new SpeechSynthesisUtterance(textToSpeak);
+  const utterance = new SpeechSynthesisUtterance(text);
   utterance.lang = "en-US";
   utterance.rate = 0.88;
   utterance.pitch = 1;
   window.speechSynthesis.speak(utterance);
+}
+
+function speakCurrentWord() {
+  const word = currentUnitWords[currentIndex];
+  const textToSpeak = getExampleKeyword(word.englishWord);
+  speakText(textToSpeak);
+}
+
+function speakCurrentExample() {
+  const word = currentUnitWords[currentIndex];
+  const example = getExampleData(word);
+  speakText(example.english);
 }
 
 function switchMode(mode) {
@@ -6087,6 +6165,7 @@ function resetTypingState() {
   typingInput.classList.remove("correct", "wrong");
   typingFeedback.textContent = "";
   typingFeedback.className = "feedback";
+  typingExampleBox.classList.add("hidden");
 }
 
 /**
@@ -6108,8 +6187,9 @@ function checkTypingAnswer() {
 
   if (isCorrect) {
     typingInput.classList.add("correct");
-    typingFeedback.textContent = "Chính xác! Bấm Từ tiếp theo để sang câu mới.";
+    typingFeedback.textContent = "Chính xác! Bạn có thể xem ví dụ bên dưới rồi bấm Từ tiếp theo.";
     typingFeedback.classList.add("success");
+    typingExampleBox.classList.remove("hidden");
     return;
   }
 
@@ -6124,6 +6204,7 @@ function showAnswer() {
   const word = currentUnitWords[currentIndex];
   typingFeedback.textContent = `Đáp án: ${getBaseWord(word.englishWord)}`;
   typingFeedback.className = "feedback error";
+  typingExampleBox.classList.remove("hidden");
 }
 
 /**
@@ -6166,6 +6247,10 @@ flashcard.addEventListener("keydown", event => {
 speakBtn.addEventListener("click", event => {
   event.stopPropagation();
   speakCurrentWord();
+});
+speakExampleBtn.addEventListener("click", event => {
+  event.stopPropagation();
+  speakCurrentExample();
 });
 prevBtn.addEventListener("click", prevWord);
 nextBtn.addEventListener("click", nextWord);

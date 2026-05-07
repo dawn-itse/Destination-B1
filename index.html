@@ -66,8 +66,12 @@
               <p class="unit-name">Nghĩa tiếng Việt</p>
               <h3 id="vietnameseMeaning">Meaning</h3>
               <div class="example-box">
-                <span>Ví dụ</span>
+                <div class="example-title">
+                  <span>Ví dụ tiếng Anh</span>
+                  <button id="speakExampleBtn" class="mini-sound-btn" type="button" title="Nghe ví dụ">🔊 Nghe ví dụ</button>
+                </div>
                 <p id="exampleText">Example</p>
+                <p id="exampleMeaningText" class="example-meaning">Nghĩa ví dụ</p>
               </div>
             </div>
           </div>
@@ -94,8 +98,14 @@
               <button id="checkBtn" class="primary-btn" type="button">Kiểm tra</button>
             </div>
 
-            <p class="typing-help">Gõ đúng thì ô nhập sẽ chuyển xanh. Bạn bấm nút Từ tiếp theo hoặc Từ trước để chuyển thủ công.</p>
+            <p class="typing-help">Gõ đúng thì ô nhập sẽ chuyển xanh. Ví dụ sẽ chỉ hiện sau khi bạn trả lời đúng hoặc bấm Hiện đáp án.</p>
             <p id="typingFeedback" class="feedback"></p>
+
+            <div id="typingExampleBox" class="typing-example hidden">
+              <span>Ví dụ</span>
+              <p id="typingExampleText">Example</p>
+              <small id="typingExampleMeaning">Nghĩa ví dụ</small>
+            </div>
 
             <div class="typing-actions">
               <button id="typingPrevBtn" class="secondary-btn" type="button">← Từ trước</button>
