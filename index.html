@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>English Vocabulary Flashcards</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <header class="hero">
+      <div>
+        <p class="eyebrow">Destination B1 Vocabulary</p>
+        <h1>Học từ vựng tiếng Anh</h1>
+        <p class="subtitle">Chọn Unit, ôn bằng flashcard, nghe phát âm và kiểm tra viết lại từ.</p>
+      </div>
+
+      <div class="hero-card">
+        <span id="totalWords">0</span>
+        <small>từ vựng</small>
+      </div>
+    </header>
+
+    <main class="main-layout">
+      <section class="panel controls-panel">
+        <label for="unitSelect" class="label">Chọn Unit</label>
+        <select id="unitSelect"></select>
+
+        <div class="mode-switch" aria-label="Chọn chế độ học">
+          <button id="flashcardModeBtn" class="mode-btn active" type="button">Flashcard</button>
+          <button id="typingModeBtn" class="mode-btn" type="button">Điền từ</button>
+        </div>
+
+        <button id="shuffleBtn" class="shuffle-btn" type="button">🔀 Xáo trộn từ</button>
+
+        <div class="progress-box">
+          <div class="progress-top">
+            <span>Tiến độ</span>
+            <strong id="progressText">0/0</strong>
+          </div>
+          <div class="progress-track">
+            <div id="progressBar" class="progress-bar"></div>
+          </div>
+        </div>
+
+        <div class="tip-box">
+          <strong>Mẹo học nhanh</strong>
+          <p>Flashcard: click vào thẻ để xem nghĩa. Điền từ: nhập từ tiếng Anh theo nghĩa tiếng Việt để kiểm tra đúng/sai.</p>
+        </div>
+      </section>
+
+      <section class="study-area">
+        <section id="flashcardSection" class="panel card-panel">
+          <div id="flashcard" class="flashcard" tabindex="0" role="button" aria-label="Click để lật thẻ">
+            <div class="card-face card-front">
+              <p class="unit-name" id="flashUnitName">Unit</p>
+              <div class="word-row">
+                <h2 id="englishWord">Word</h2>
+                <button id="speakBtn" class="icon-btn" type="button" title="Nghe phát âm">🔊</button>
+              </div>
+              <p id="pronunciation" class="pronunciation"></p>
+              <p class="click-hint">Click vào thẻ để xem nghĩa</p>
+            </div>
+
+            <div class="card-face card-back">
+              <p class="unit-name">Nghĩa tiếng Việt</p>
+              <h3 id="vietnameseMeaning">Meaning</h3>
+              <div class="example-box">
+                <span>Ví dụ</span>
+                <p id="exampleText">Example</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="nav-buttons">
+            <button id="prevBtn" class="secondary-btn" type="button">← Từ trước đó</button>
+            <button id="nextBtn" class="primary-btn" type="button">Từ tiếp theo →</button>
+          </div>
+        </section>
+
+        <section id="typingSection" class="panel typing-panel hidden">
+          <div class="typing-header">
+            <p class="unit-name" id="typingUnitName">Unit</p>
+            <span id="typingPosition" class="typing-position">Từ 0/0</span>
+          </div>
+
+          <div class="typing-card">
+            <span class="typing-label">Nghĩa tiếng Việt</span>
+            <h2 id="typingMeaning" class="typing-question">Nghĩa tiếng Việt</h2>
+
+            <label for="typingInput" class="label">Nhập từ tiếng Anh tương ứng</label>
+            <div class="typing-form">
+              <input id="typingInput" type="text" autocomplete="off" placeholder="Ví dụ: captain" />
+              <button id="checkBtn" class="primary-btn" type="button">Kiểm tra</button>
+            </div>
+
+            <p class="typing-help">Gõ đúng thì ô nhập sẽ chuyển xanh. Bạn bấm nút Từ tiếp theo hoặc Từ trước để chuyển thủ công.</p>
+            <p id="typingFeedback" class="feedback"></p>
+
+            <div class="typing-actions">
+              <button id="typingPrevBtn" class="secondary-btn" type="button">← Từ trước</button>
+              <button id="showAnswerBtn" class="secondary-btn" type="button">Hiện đáp án</button>
+              <button id="typingNextBtn" class="secondary-btn" type="button">Từ tiếp theo →</button>
+            </div>
+          </div>
+        </section>
+
+        <section id="listPanel" class="panel list-panel">
+          <div class="list-header">
+            <h2>Danh sách từ trong Unit</h2>
+            <span id="unitCount">0 từ</span>
+          </div>
+          <div id="wordList" class="word-list"></div>
+        </section>
+      </section>
+    </main>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
