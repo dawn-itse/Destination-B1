@@ -5925,6 +5925,7 @@ const typingExampleBox = document.getElementById("typingExampleBox");
 const typingExampleText = document.getElementById("typingExampleText");
 const typingExampleMeaning = document.getElementById("typingExampleMeaning");
 const showAnswerBtn = document.getElementById("showAnswerBtn");
+const autoNextBtn = document.getElementById("autoNextBtn");
 const typingPrevBtn = document.getElementById("typingPrevBtn");
 const typingNextBtn = document.getElementById("typingNextBtn");
 const listPanel = document.getElementById("listPanel");
@@ -5933,6 +5934,8 @@ const wordList = document.getElementById("wordList");
 let currentUnitWords = [];
 let currentIndex = 0;
 let currentMode = "flashcard";
+let autoNextEnabled = localStorage.getItem("typingAutoNextEnabled") === "true";
+let autoNextTimer = null;
 
 /**
  * Loại bỏ chú thích loại từ ở cuối như: (v), (n), (adj), (pv)...
@@ -6161,7 +6164,31 @@ function switchMode(mode) {
   if (!isFlashcard) typingInput.focus();
 }
 
+function clearAutoNextTimer() {
+  if (!autoNextTimer) return;
+  clearTimeout(autoNextTimer);
+  autoNextTimer = null;
+}
+
+function updateAutoNextButton() {
+  autoNextBtn.textContent = autoNextEnabled ? "Auto chuyển: Bật" : "Auto chuyển: Tắt";
+  autoNextBtn.classList.toggle("active", autoNextEnabled);
+  autoNextBtn.setAttribute("aria-pressed", String(autoNextEnabled));
+}
+
+function toggleAutoNext() {
+  autoNextEnabled = !autoNextEnabled;
+  localStorage.setItem("typingAutoNextEnabled", String(autoNextEnabled));
+  clearAutoNextTimer();
+  updateAutoNextButton();
+
+  if (currentMode === "typing") {
+    typingInput.focus();
+  }
+}
+
 function resetTypingState() {
+  clearAutoNextTimer();
   typingInput.classList.remove("correct", "wrong");
   typingFeedback.textContent = "";
   typingFeedback.className = "feedback";
@@ -6170,8 +6197,8 @@ function resetTypingState() {
 
 /**
  * Kiểm tra câu trả lời trong Typing Test.
- * Nếu nhập đúng, input chuyển xanh và giữ nguyên câu hiện tại.
- * Người học tự bấm nút Từ tiếp theo/Từ trước để chuyển câu.
+ * Nếu nhập đúng, input chuyển xanh.
+ * Khi bật Auto, app đợi 2 giây rồi tự chuyển sang từ tiếp theo.
  */
 function checkTypingAnswer() {
   const word = currentUnitWords[currentIndex];
@@ -6187,9 +6214,20 @@ function checkTypingAnswer() {
 
   if (isCorrect) {
     typingInput.classList.add("correct");
-    typingFeedback.textContent = "Chính xác! Bạn có thể xem ví dụ bên dưới rồi bấm Từ tiếp theo.";
+    typingFeedback.textContent = autoNextEnabled
+      ? "Chính xác! 2 giây nữa app sẽ tự chuyển sang từ tiếp theo."
+      : "Chính xác! Bạn có thể xem ví dụ bên dưới rồi bấm Từ tiếp theo.";
     typingFeedback.classList.add("success");
     typingExampleBox.classList.remove("hidden");
+
+    if (autoNextEnabled) {
+      autoNextTimer = setTimeout(() => {
+        autoNextTimer = null;
+        nextWord();
+        if (currentMode === "typing") typingInput.focus();
+      }, 2000);
+    }
+
     return;
   }
 
@@ -6263,6 +6301,7 @@ typingInput.addEventListener("keydown", event => {
 });
 checkBtn.addEventListener("click", checkTypingAnswer);
 typingPrevBtn.addEventListener("click", prevWord);
+autoNextBtn.addEventListener("click", toggleAutoNext);
 typingNextBtn.addEventListener("click", nextWord);
 showAnswerBtn.addEventListener("click", showAnswer);
 wordList.addEventListener("click", event => {
@@ -6278,5 +6317,6 @@ document.addEventListener("keydown", event => {
   if (event.key === "ArrowLeft") prevWord();
 });
 
+updateAutoNextButton();
 renderUnits();
 loadUnit(unitSelect.value);
