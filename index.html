@@ -3,128 +3,387 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>English Vocabulary Flashcards</title>
+  <title>Destination B1 Learning Center</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="app-shell">
-    <header class="hero">
-      <div>
-        <p class="eyebrow">Destination B1 Vocabulary</p>
-        <h1>Học từ vựng tiếng Anh</h1>
-        <p class="subtitle">Chọn Unit, ôn bằng flashcard, nghe phát âm và kiểm tra viết lại từ.</p>
+  <div class="learning-app">
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <div class="brand-icon">📖</div>
+        <div>
+          <strong>English</strong>
+          <span>Learning Center</span>
+        </div>
       </div>
 
-      <div class="hero-card">
-        <span id="totalWords">0</span>
-        <small>từ vựng</small>
+      <nav class="side-nav" aria-label="Điều hướng chính">
+        <button class="nav-item active" type="button" data-page="overview"><span>🏠</span>Tổng quan</button>
+        <button class="nav-item" type="button" data-page="vocabulary"><span>📘</span>Từ vựng</button>
+        <button class="nav-item" type="button" data-page="grammar"><span>✍️</span>Ngữ pháp</button>
+        <button class="nav-item" type="button" data-page="wordform"><span>🧩</span>Word Form</button>
+        <button class="nav-item" type="button" data-page="ipa"><span>🔊</span>Bảng IPA</button>
+        <button class="nav-item" type="button" data-page="tests"><span>🧪</span>Kiểm tra</button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <button class="nav-item settings-trigger" type="button" data-page="settings"><span>⚙️</span>Settings</button>
       </div>
-    </header>
+    </aside>
 
-    <main class="main-layout">
-      <section class="panel controls-panel">
-        <label for="unitSelect" class="label">Chọn Unit</label>
-        <select id="unitSelect"></select>
-
-        <div class="mode-switch" aria-label="Chọn chế độ học">
-          <button id="flashcardModeBtn" class="mode-btn active" type="button">Flashcard</button>
-          <button id="typingModeBtn" class="mode-btn" type="button">Điền từ</button>
+    <div class="content-shell">
+      <header class="topbar">
+        <button id="menuToggle" class="menu-toggle" type="button" aria-label="Mở menu">☰</button>
+        <div>
+          <p class="eyebrow">Destination B1 Study App</p>
+          <h1 id="pageTitle">Chào mừng trở lại!</h1>
         </div>
-
-        <button id="shuffleBtn" class="shuffle-btn" type="button">🔀 Xáo trộn từ</button>
-
-        <div class="progress-box">
-          <div class="progress-top">
-            <span>Tiến độ</span>
-            <strong id="progressText">0/0</strong>
-          </div>
-          <div class="progress-track">
-            <div id="progressBar" class="progress-bar"></div>
-          </div>
+        <div class="profile-pill">
+          <span id="streakCount">🔥 0</span>
+          <small>ngày học</small>
         </div>
+      </header>
 
-        <div class="tip-box">
-          <strong>Mẹo học nhanh</strong>
-          <p>Flashcard: click vào thẻ để xem nghĩa. Điền từ: nhập từ tiếng Anh theo nghĩa tiếng Việt để kiểm tra đúng/sai.</p>
-        </div>
-      </section>
-
-      <section class="study-area">
-        <section id="flashcardSection" class="panel card-panel">
-          <div id="flashcard" class="flashcard" tabindex="0" role="button" aria-label="Click để lật thẻ">
-            <div class="card-face card-front">
-              <p class="unit-name" id="flashUnitName">Unit</p>
-              <div class="word-row">
-                <h2 id="englishWord">Word</h2>
-                <button id="speakBtn" class="icon-btn" type="button" title="Nghe phát âm">🔊</button>
+      <main>
+        <section id="page-overview" class="page active">
+          <div class="overview-hero">
+            <div>
+              <p class="eyebrow">Lộ trình học cá nhân</p>
+              <h2>Chinh phục Destination B1 từng phần một</h2>
+              <p>Từ vựng giữ nguyên dữ liệu của bạn, thêm ngữ pháp theo từng thì, kiểm tra riêng từng phần và bài test xáo trộn.</p>
+              <div class="hero-actions">
+                <button class="primary-btn" type="button" data-go-page="vocabulary">Tiếp tục học từ vựng</button>
+                <button class="secondary-btn" type="button" data-go-page="tests">Làm bài Test</button>
               </div>
-              <p id="pronunciation" class="pronunciation"></p>
-              <p class="click-hint">Click vào thẻ để xem nghĩa</p>
             </div>
+            <div class="course-card">
+              <span id="coursePercent">0%</span>
+              <strong>Hoàn thành</strong>
+              <div class="progress-track"><div id="courseProgressBar" class="progress-bar"></div></div>
+              <small id="courseSubtitle">Đang tính tiến độ...</small>
+            </div>
+          </div>
 
-            <div class="card-face card-back">
-              <p class="unit-name">Nghĩa tiếng Việt</p>
-              <h3 id="vietnameseMeaning">Meaning</h3>
-              <div class="example-box">
-                <div class="example-title">
-                  <span>Ví dụ tiếng Anh</span>
-                  <button id="speakExampleBtn" class="mini-sound-btn" type="button" title="Nghe ví dụ">🔊 Nghe ví dụ</button>
+          <div class="stats-grid">
+            <article class="stat-card purple">
+              <span id="overviewTotalWords">0</span>
+              <strong>Từ vựng</strong>
+              <p>Flashcard, điền từ, auto chuyển, nghe phát âm.</p>
+            </article>
+            <article class="stat-card blue">
+              <span id="overviewGrammarCount">0</span>
+              <strong>Thì ngữ pháp</strong>
+              <p>Cheat sheet, cách dùng thật, ví dụ và lỗi thường gặp.</p>
+            </article>
+            <article class="stat-card mint">
+              <span id="overviewBestScore">0%</span>
+              <strong>Điểm test tốt nhất</strong>
+              <p>Lưu kết quả bài kiểm tra theo từng thì và bài xáo trộn.</p>
+            </article>
+            <article class="stat-card orange">
+              <span id="overviewMistakes">0</span>
+              <strong>Lỗi sai cần ôn</strong>
+              <p>App tự lưu câu sai để bạn xem lại sau mỗi bài test.</p>
+            </article>
+          </div>
+
+          <div class="dashboard-grid">
+            <article class="panel roadmap-panel">
+              <div class="section-heading">
+                <div>
+                  <p class="eyebrow">Hôm nay nên học gì?</p>
+                  <h2>Lộ trình gợi ý</h2>
                 </div>
-                <p id="exampleText">Example</p>
-                <p id="exampleMeaningText" class="example-meaning">Nghĩa ví dụ</p>
               </div>
-            </div>
-          </div>
+              <div id="studyPlan" class="study-plan"></div>
+            </article>
 
-          <div class="nav-buttons">
-            <button id="prevBtn" class="secondary-btn" type="button">← Từ trước đó</button>
-            <button id="nextBtn" class="primary-btn" type="button">Từ tiếp theo →</button>
-          </div>
-        </section>
-
-        <section id="typingSection" class="panel typing-panel hidden">
-          <div class="typing-header">
-            <p class="unit-name" id="typingUnitName">Unit</p>
-            <span id="typingPosition" class="typing-position">Từ 0/0</span>
-          </div>
-
-          <div class="typing-card">
-            <span class="typing-label">Nghĩa tiếng Việt</span>
-            <h2 id="typingMeaning" class="typing-question">Nghĩa tiếng Việt</h2>
-
-            <label for="typingInput" class="label">Nhập từ tiếng Anh tương ứng</label>
-            <div class="typing-form">
-              <input id="typingInput" type="text" autocomplete="off" placeholder="Ví dụ: captain" />
-              <button id="checkBtn" class="primary-btn" type="button">Kiểm tra</button>
-            </div>
-
-            <p class="typing-help">Gõ đúng thì ô nhập sẽ chuyển xanh. Nếu bật Auto, app sẽ tự chuyển sang từ mới sau 2 giây.</p>
-            <p id="typingFeedback" class="feedback"></p>
-
-            <div id="typingExampleBox" class="typing-example hidden">
-              <span>Ví dụ</span>
-              <p id="typingExampleText">Example</p>
-              <small id="typingExampleMeaning">Nghĩa ví dụ</small>
-            </div>
-
-            <div class="typing-actions">
-              <button id="typingPrevBtn" class="secondary-btn" type="button">← Từ trước</button>
-              <button id="showAnswerBtn" class="secondary-btn" type="button">Hiện đáp án</button>
-              <button id="autoNextBtn" class="secondary-btn auto-next-btn" type="button" aria-pressed="false">Auto chuyển: Tắt</button>
-              <button id="typingNextBtn" class="secondary-btn" type="button">Từ tiếp theo →</button>
-            </div>
+            <article class="panel mistake-panel">
+              <div class="section-heading">
+                <div>
+                  <p class="eyebrow">Sổ tay lỗi sai</p>
+                  <h2>Câu cần ôn lại</h2>
+                </div>
+                <button id="clearMistakesBtn" class="text-btn" type="button">Xóa lỗi</button>
+              </div>
+              <div id="mistakeList" class="mistake-list empty-state">Chưa có lỗi sai nào. Làm test để app tự lưu câu cần ôn.</div>
+            </article>
           </div>
         </section>
 
-        <section id="listPanel" class="panel list-panel">
-          <div class="list-header">
-            <h2>Danh sách từ trong Unit</h2>
-            <span id="unitCount">0 từ</span>
+        <section id="page-vocabulary" class="page">
+          <div class="page-header-card">
+            <div>
+              <p class="eyebrow">Destination B1 Vocabulary</p>
+              <h2>Học từ vựng tiếng Anh</h2>
+              <p>Chọn Unit, ôn bằng flashcard, nghe phát âm và kiểm tra viết lại từ.</p>
+            </div>
+            <div class="hero-card">
+              <span id="totalWords">0</span>
+              <small>từ vựng</small>
+            </div>
           </div>
-          <div id="wordList" class="word-list"></div>
+
+          <div class="main-layout">
+            <section class="panel controls-panel">
+              <label for="unitSelect" class="label">Chọn Unit</label>
+              <select id="unitSelect"></select>
+
+              <div class="mode-switch" aria-label="Chọn chế độ học">
+                <button id="flashcardModeBtn" class="mode-btn active" type="button">Flashcard</button>
+                <button id="typingModeBtn" class="mode-btn" type="button">Điền từ</button>
+              </div>
+
+              <button id="shuffleBtn" class="shuffle-btn" type="button">🔀 Xáo trộn từ</button>
+
+              <div class="progress-box">
+                <div class="progress-top">
+                  <span>Tiến độ Unit</span>
+                  <strong id="progressText">0/0</strong>
+                </div>
+                <div class="progress-track"><div id="progressBar" class="progress-bar"></div></div>
+              </div>
+
+              <div class="tip-box">
+                <strong>Mẹo học nhanh</strong>
+                <p>Flashcard: click vào thẻ để xem nghĩa. Điền từ: nhập từ tiếng Anh theo nghĩa tiếng Việt. Bật Auto để đúng từ nào chuyển sau 2 giây.</p>
+              </div>
+            </section>
+
+            <section class="study-area">
+              <section id="flashcardSection" class="panel card-panel">
+                <div id="flashcard" class="flashcard" tabindex="0" role="button" aria-label="Click để lật thẻ">
+                  <div class="card-face card-front">
+                    <p class="unit-name" id="flashUnitName">Unit</p>
+                    <div class="word-row">
+                      <h2 id="englishWord">Word</h2>
+                      <button id="speakBtn" class="icon-btn" type="button" title="Nghe phát âm">🔊</button>
+                    </div>
+                    <p id="pronunciation" class="pronunciation"></p>
+                    <p class="click-hint">Click vào thẻ để xem nghĩa</p>
+                  </div>
+
+                  <div class="card-face card-back">
+                    <p class="unit-name">Nghĩa tiếng Việt</p>
+                    <h3 id="vietnameseMeaning">Meaning</h3>
+                    <div class="example-box">
+                      <div class="example-title">
+                        <span>Ví dụ tiếng Anh</span>
+                        <button id="speakExampleBtn" class="mini-sound-btn" type="button" title="Nghe ví dụ">🔊 Nghe ví dụ</button>
+                      </div>
+                      <p id="exampleText">Example</p>
+                      <p id="exampleMeaningText" class="example-meaning">Nghĩa ví dụ</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="nav-buttons">
+                  <button id="prevBtn" class="secondary-btn" type="button">← Từ trước đó</button>
+                  <button id="nextBtn" class="primary-btn" type="button">Từ tiếp theo →</button>
+                </div>
+              </section>
+
+              <section id="typingSection" class="panel typing-panel hidden">
+                <div class="typing-header">
+                  <p class="unit-name" id="typingUnitName">Unit</p>
+                  <span id="typingPosition" class="typing-position">Từ 0/0</span>
+                </div>
+
+                <div class="typing-card">
+                  <span class="typing-label">Nghĩa tiếng Việt</span>
+                  <h2 id="typingMeaning" class="typing-question">Nghĩa tiếng Việt</h2>
+
+                  <label for="typingInput" class="label">Nhập từ tiếng Anh tương ứng</label>
+                  <div class="typing-form">
+                    <input id="typingInput" type="text" autocomplete="off" placeholder="Ví dụ: captain" />
+                    <button id="checkBtn" class="primary-btn" type="button">Kiểm tra</button>
+                  </div>
+
+                  <p class="typing-help">Gõ đúng thì ô nhập sẽ chuyển xanh. Nếu bật Auto, app sẽ tự chuyển sang từ mới sau 2 giây.</p>
+                  <p id="typingFeedback" class="feedback"></p>
+
+                  <div id="typingExampleBox" class="typing-example hidden">
+                    <span>Ví dụ</span>
+                    <p id="typingExampleText">Example</p>
+                    <small id="typingExampleMeaning">Nghĩa ví dụ</small>
+                  </div>
+
+                  <div class="typing-actions">
+                    <button id="typingPrevBtn" class="secondary-btn" type="button">← Từ trước</button>
+                    <button id="showAnswerBtn" class="secondary-btn" type="button">Hiện đáp án</button>
+                    <button id="autoNextBtn" class="secondary-btn auto-next-btn" type="button" aria-pressed="false">Auto chuyển: Tắt</button>
+                    <button id="typingNextBtn" class="secondary-btn" type="button">Từ tiếp theo →</button>
+                  </div>
+                </div>
+              </section>
+
+              <section id="listPanel" class="panel list-panel">
+                <div class="list-header">
+                  <h2>Danh sách từ trong Unit</h2>
+                  <span id="unitCount">0 từ</span>
+                </div>
+                <div id="wordList" class="word-list"></div>
+              </section>
+            </section>
+          </div>
         </section>
-      </section>
-    </main>
+
+        <section id="page-grammar" class="page">
+          <div class="page-header-card gradient-blue">
+            <div>
+              <p class="eyebrow">Destination B1 Grammar</p>
+              <h2>Grammar Units Overview</h2>
+              <p>Mỗi thì có công thức, cách dùng đời thật, ví dụ, dấu hiệu nhận biết và bài kiểm tra riêng.</p>
+            </div>
+            <div class="hero-card">
+              <span id="grammarPointCard">0</span>
+              <small>điểm ngữ pháp</small>
+            </div>
+          </div>
+
+          <div class="grammar-layout">
+            <section class="grammar-left">
+              <div class="grammar-filters">
+                <label>Sắp xếp theo
+                  <select id="grammarSortSelect">
+                    <option value="order">Thứ tự học</option>
+                    <option value="progress">Tiến độ</option>
+                    <option value="name">Tên A-Z</option>
+                  </select>
+                </label>
+                <label>Danh mục ngữ pháp
+                  <select id="grammarCategorySelect">
+                    <option value="all">Tất cả</option>
+                    <option value="present">Hiện tại</option>
+                    <option value="past">Quá khứ</option>
+                    <option value="future">Tương lai</option>
+                  </select>
+                </label>
+              </div>
+              <div id="grammarList" class="grammar-list"></div>
+            </section>
+
+            <aside id="grammarDetail" class="panel grammar-detail"></aside>
+          </div>
+        </section>
+
+        <section id="page-wordform" class="page">
+          <div class="page-header-card gradient-purple">
+            <div>
+              <p class="eyebrow">Word Formation</p>
+              <h2>Học hậu tố, tiền tố và chuyển loại từ</h2>
+              <p>Bổ sung bảng học nhanh để nhận diện noun, adjective, adverb, verb trong bài thi.</p>
+            </div>
+            <button class="primary-btn" type="button" id="startWordFormQuizBtn">Luyện Word Form</button>
+          </div>
+          <div class="wordform-grid" id="wordFormGrid"></div>
+          <section class="panel wordform-practice" id="wordFormPractice"></section>
+        </section>
+
+        <section id="page-ipa" class="page">
+          <div class="page-header-card gradient-ipa">
+            <div>
+              <p class="eyebrow">Interactive IPA Phonetic Chart</p>
+              <h2>Bảng IPA tương tác</h2>
+              <p>Bấm vào âm để xem ví dụ, khẩu hình mô tả và nghe phát âm mẫu.</p>
+            </div>
+          </div>
+          <div class="ipa-layout">
+            <section class="panel ipa-board">
+              <div id="ipaChart"></div>
+            </section>
+            <aside class="panel ipa-detail" id="ipaDetail"></aside>
+          </div>
+        </section>
+
+        <section id="page-tests" class="page">
+          <div class="page-header-card">
+            <div>
+              <p class="eyebrow">Destination B1 Tests</p>
+              <h2>Kiểm tra định kỳ</h2>
+              <p>Chọn kiểm tra từng thì hoặc xáo trộn giữa nhiều thì để luyện phản xạ.</p>
+            </div>
+          </div>
+
+          <section id="quizSetup" class="panel quiz-setup">
+            <div class="setup-grid">
+              <label>Loại bài kiểm tra
+                <select id="testModeSelect">
+                  <option value="mixed">Xáo trộn tất cả các thì</option>
+                  <option value="single">Kiểm tra từng thì</option>
+                  <option value="mistakes">Ôn lại lỗi sai</option>
+                </select>
+              </label>
+              <label id="testTenseLabel">Chọn thì
+                <select id="testTenseSelect"></select>
+              </label>
+              <label>Số câu
+                <select id="testCountSelect">
+                  <option value="10">10 câu</option>
+                  <option value="15">15 câu</option>
+                  <option value="20">20 câu</option>
+                </select>
+              </label>
+            </div>
+            <button id="startQuizBtn" class="primary-btn" type="button">Bắt đầu làm bài</button>
+          </section>
+
+          <section id="quizBox" class="quiz-box hidden">
+            <div class="quiz-top panel">
+              <div>
+                <button id="exitQuizBtn" class="text-btn" type="button">← Quay lại</button>
+                <h2 id="quizTitle">Destination B1 Review Test</h2>
+              </div>
+              <div class="timer-pill">⏱ <span id="quizTimer">00:00</span></div>
+              <div class="progress-track"><div id="quizProgressBar" class="progress-bar"></div></div>
+              <span id="quizCounter">Câu 1/10</span>
+            </div>
+
+            <div class="quiz-layout">
+              <article class="panel question-card">
+                <p id="questionType" class="eyebrow">Question</p>
+                <h3 id="questionText">Question text</h3>
+                <div id="optionsList" class="options-list"></div>
+                <div id="questionExplain" class="question-explain hidden"></div>
+                <div class="quiz-actions">
+                  <button id="prevQuestionBtn" class="secondary-btn" type="button">← Câu trước</button>
+                  <button id="nextQuestionBtn" class="primary-btn" type="button">Câu tiếp →</button>
+                </div>
+              </article>
+              <aside class="panel navigator-card">
+                <h3>Question Navigator</h3>
+                <div id="quizNavigator" class="quiz-navigator"></div>
+                <button id="submitQuizBtn" class="primary-btn" type="button">Nộp bài</button>
+              </aside>
+            </div>
+          </section>
+
+          <section id="quizResult" class="panel quiz-result hidden"></section>
+        </section>
+
+        <section id="page-settings" class="page">
+          <div class="page-header-card">
+            <div>
+              <p class="eyebrow">Settings</p>
+              <h2>Tùy chỉnh học tập</h2>
+              <p>Các lựa chọn được lưu trên trình duyệt bằng localStorage.</p>
+            </div>
+          </div>
+          <div class="settings-grid">
+            <section class="panel setting-card">
+              <h3>Giao diện</h3>
+              <p>Bật/tắt nền tối để học buổi tối dễ hơn.</p>
+              <button id="themeToggleBtn" class="secondary-btn" type="button">Đổi giao diện</button>
+            </section>
+            <section class="panel setting-card">
+              <h3>Tiến độ</h3>
+              <p>Xóa điểm test, thì đã học và sổ tay lỗi sai.</p>
+              <button id="resetProgressBtn" class="danger-btn" type="button">Reset tiến độ</button>
+            </section>
+          </div>
+        </section>
+      </main>
+    </div>
   </div>
 
   <script src="script.js"></script>
